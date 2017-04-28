@@ -1,0 +1,12 @@
+$calm: #CBD4F9;
+$positive: #879EFA;
+$ionicons-font-path: "../lib/ionic/fonts" !default;
+@import "../www/lib/ionic/scss";
+.header {
+	width: 400px;
+	display: table-cell;
+	vertical-align: middle;
+	height: 75px;
+	background: #CBD4F9;
+}
+

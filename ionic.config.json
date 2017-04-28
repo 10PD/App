@@ -1,0 +1,5 @@
+{
+  "name": "smartBellApp",
+  "app_id": "",
+  "gulpStartupTasks": ["sass", "watch"]
+}
