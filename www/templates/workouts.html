@@ -5,13 +5,7 @@
     </div>
     <div class="spacer" style="height: 20px;"></div>
     <ion-list id="workouts-list3">
-      <ion-item class="item-icon-right" id="workouts-list-item10">Bicep Curl
-        <i class="icon ion-chevron-down"></i>
-      </ion-item>
-      <ion-item class="item-icon-right" id="workouts-list-item11">Chest Press
-        <i class="icon ion-chevron-down"></i>
-      </ion-item>
-      <ion-item class="item-icon-right" id="workouts-list-item12">Tricep Curl
+      <ion-item ng-repeat="workout in workouts" class="item-icon-right" id="workouts-list-item10">{{workout.workout}}
         <i class="icon ion-chevron-down"></i>
       </ion-item>
     </ion-list>

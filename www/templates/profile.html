@@ -5,12 +5,12 @@
     </div>
     <h3 id="profile-heading8" style="color:#879EFA;text-align:center;">Name</h3>
     <div id="profile-markdown5" style="text-align:center;" class="show-list-numbers-and-dots">
-      <p style="color:#879EFA;" ng-model="name">{{name}}</p>
+      <p style="color:#879EFA;">{{user.name}}</p>
     </div>
     <div class="spacer" style="height: 10px;"></div>
     <h3 id="profile-heading9" style="color:#879EFA;text-align:center;">User Since</h3>
     <div id="profile-markdown6" style="text-align:center;" class="show-list-numbers-and-dots">
-      <p style="color:#879EFA;">{{ user.dateJoined }}</p>
+      <p style="color:#879EFA;">{{ user.dateJoined | date :  "dd.MM.y" }}</p>
     </div>
     <div class="spacer" style="height: 10px;"></div>
     <h3 id="profile-heading10" style="color:#879EFA;text-align:center;">Workouts</h3>

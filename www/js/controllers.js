@@ -14,7 +14,7 @@ angular.module('app.controllers', [])
     this.decodeToken = function(t){
         var one = t.split('.')[1];
         var two = one.replace('-', '+').replace('_', '/');
-        return JSON.parse(window.atob(two));
+        return JSON.parse(window.atob(two))._doc;
     }
 })
 
@@ -27,12 +27,12 @@ function ($scope, $stateParams, userToken) {
 
 }])
    
-.controller('workoutsCtrl', ['$scope', '$stateParams', 'userToken',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('workoutsCtrl', ['$scope', '$stateParams', 'userToken', '$http', 'jwtDecode', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, userToken) {
+function ($scope, $stateParams, userToken, $http, jwtDecode) {
     
-    alert("Token Workouts Page:" + userToken.getToken());
+    
 
 }])
    
@@ -40,17 +40,13 @@ function ($scope, $stateParams, userToken) {
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $stateParams, userToken, jwtDecode) {
-    $scope.decodedToken = jwtDecode(userToken.getToken())._doc;
-    /*$scope.user = {
-        'name': decodedToken.name,
-        'dateJoined': $filter('date')(decodedToken.date_Joined, "dd/MM/yyyy"),
-        'workoutNum': decodedToken.workouts.length
-    }*/
-    $scope.name = "George";
-    /*$scope.dateJoined = $filter('date')(userDetails.date_Joined, "dd/MM/yyyy");
-    $scope.workoutNum = userDetails.workouts.length;*/
-
-    alert("Token Profile Page:" + userToken.getToken());
+    //var decodedToken = jwtDecode.decodeToken($scope.token);
+    $scope.user = {
+        name: jwtDecode.decodeToken(userToken.getToken()).name,
+        dateJoined: jwtDecode.decodeToken(userToken.getToken()).date_Joined,
+        workoutNum: jwtDecode.decodeToken(userToken.getToken()).workouts.length
+    };
+    //alert(jwtDecode.decodeToken(userToken.getToken()).name);
 
 }])
       
@@ -106,7 +102,7 @@ $scope.signup = function(){
             $scope.token = res.data.token;
             userToken.setToken($scope.token);
             alert("About to decode");
-            alert("Decoded Token: "  + JSON.stringify(parseJwt($scope.token)));
+            alert("Decoded Token: "  + JSON.stringify(jwtDecode.decodeToken($scope.token)));
             alert("signup complete");
             $state.go('tabsController.linkDumbbell');
         } else {
