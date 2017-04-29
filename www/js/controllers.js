@@ -32,7 +32,14 @@ function ($scope, $stateParams, userToken) {
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $stateParams, userToken, $http, jwtDecode) {
     
-    
+    $http.get("http://46.101.3.244/api/workoutData", {headers: {'Content-Type': 'application/json', 'token': userToken.getToken()}}).then(function(res){
+        alert(JSON.stringify(res));
+        if(res.data.status){
+            $scope.wokouts = res.data.data;
+        } else {
+            alert("An error occured, try again in a bit!");
+        }
+    })
 
 }])
    

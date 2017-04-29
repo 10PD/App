@@ -8,6 +8,7 @@
       <ion-item ng-repeat="workout in workouts" class="item-icon-right" id="workouts-list-item10">{{workout.workout}}
         <i class="icon ion-chevron-down"></i>
       </ion-item>
+      <ion-item ng-show="!workouts.length">No workouts yet, hit the gym!</ion-item>
     </ion-list>
   </ion-content>
 </ion-view>
