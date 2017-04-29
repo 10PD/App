@@ -10,6 +10,14 @@ angular.module('app.controllers', [])
     }
 })
 
+.service('jwtDecode', function(){
+    this.decodeToken = function(t){
+        var one = t.split('.')[1];
+        var two = one.replace('-', '+').replace('_', '/');
+        return JSON.parse(window.atob(two));
+    }
+})
+
 .controller('linkDumbbellCtrl', ['$scope', '$stateParams', 'userToken',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
@@ -28,10 +36,19 @@ function ($scope, $stateParams, userToken) {
 
 }])
    
-.controller('profileCtrl', ['$scope', '$stateParams', 'userToken',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('profileCtrl', ['$scope', '$stateParams', 'userToken', 'jwtDecode',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, userToken) {
+function ($scope, $stateParams, userToken, jwtDecode) {
+    $scope.decodedToken = jwtDecode(userToken.getToken())._doc;
+    /*$scope.user = {
+        'name': decodedToken.name,
+        'dateJoined': $filter('date')(decodedToken.date_Joined, "dd/MM/yyyy"),
+        'workoutNum': decodedToken.workouts.length
+    }*/
+    $scope.name = "George";
+    /*$scope.dateJoined = $filter('date')(userDetails.date_Joined, "dd/MM/yyyy");
+    $scope.workoutNum = userDetails.workouts.length;*/
 
     alert("Token Profile Page:" + userToken.getToken());
 
@@ -45,21 +62,23 @@ function ($scope, $stateParams) {
 
 }])
    
-.controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', 'userToken', 'angular-jwt', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', 'userToken', 'jwtDecode',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, $http, $state, userToken, jwtHelper) {
+function ($scope, $stateParams, $http, $state, userToken, jwtDecode) {
     
     $scope.loginData = {
         'email':'',
         'password':''
     }
+
     $scope.login = function(){
         $http.post('http://46.101.3.244/api/authUser', $scope.loginData, {headers: {'Content-Type': 'application/json'}}).then(function(res){
             if(res.data.success){
                 $scope.token = res.data.token;
                 userToken.setToken($scope.token);
-                alert("Decoded Token: " + JSON.stringify(jwtHelper.decodeToken(token)));
+                alert("About to decode");
+                alert("Decoded Token: "  + JSON.stringify(jwtDecode.decodeToken($scope.token)));
                 $state.go('tabsController.linkDumbbell');
             } else {
                 alert("Couldn't log you in, please try again");
@@ -71,10 +90,10 @@ function ($scope, $stateParams, $http, $state, userToken, jwtHelper) {
 };
 }])
    
-.controller('signupCtrl', ['$scope', '$stateParams', '$http', '$state', 'userToken', 'angular-jwt',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('signupCtrl', ['$scope', '$stateParams', '$http', '$state', 'userToken', 'jwtDecode',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, $http, $state, userToken, jwtHelper) {
+function ($scope, $stateParams, $http, $state, userToken, jwtDecode) {
 $scope.signupData = {
     'name':'',
     'email':'',
@@ -86,7 +105,8 @@ $scope.signup = function(){
         if(res.data.success){
             $scope.token = res.data.token;
             userToken.setToken($scope.token);
-            alert("Decoded Token: " + JSON.stringify(jwtHelper.decodeToken(token)));
+            alert("About to decode");
+            alert("Decoded Token: "  + JSON.stringify(parseJwt($scope.token)));
             alert("signup complete");
             $state.go('tabsController.linkDumbbell');
         } else {
