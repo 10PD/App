@@ -17,13 +17,29 @@ angular.module('app.controllers', [])
         return JSON.parse(window.atob(two))._doc;
     }
 })
-
-.controller('linkDumbbellCtrl', ['$scope', '$stateParams', 'userToken',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller("QRScanner", function($scope, $cordovaBarcodeScanner){
+    $scope.scanBarcode = function(){
+        ionic.Platform.ready(function(){
+            $cordovaBarcodeScanner.scan().then(function(imgData){
+                alert(imgData.text);
+            }, function(err){
+                alert("Error: " + err);
+            })
+        });
+    }
+})
+.controller('linkDumbbellCtrl', ['$scope', '$stateParams', 'userToken', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, userToken) {
+function ($scope, $stateParams, $cordovaBarcodeScanner) {
 
-    alert("Token Scan Page:" + userToken.getToken());
+    /*$scope.scanBarcode = function(){
+        $cordovaBarcodeScanner.scan().then(function(imgData){
+            alert(imgData.text);
+        }, function(err){
+            alert("Error: " + err);
+        })
+    }*/
 
 }])
    
@@ -31,7 +47,7 @@ function ($scope, $stateParams, userToken) {
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $stateParams, userToken, $http, jwtDecode) {
-    
+
     $http.get("http://46.101.3.244/api/workoutData", {headers: {'Content-Type': 'application/json', 'token': userToken.getToken()}}).then(function(res){
         alert(JSON.stringify(res));
         if(res.data.status){
