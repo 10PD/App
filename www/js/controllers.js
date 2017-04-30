@@ -17,15 +17,29 @@ angular.module('app.controllers', [])
         return JSON.parse(window.atob(two))._doc;
     }
 })
-.controller("QRScanner", function($scope, $cordovaBarcodeScanner){
+.controller("QRScanner", function($scope, $cordovaBarcodeScanner, userToken, $http){
+    //var userToken = userToken.getToken();
+
+    $scope.dumbbellLinked = false;
+
     $scope.scanBarcode = function(){
         ionic.Platform.ready(function(){
             $cordovaBarcodeScanner.scan().then(function(imgData){
-                alert(imgData.text);
+                var dumbbellId = imgData.text;
+                $http.get("http://46.101.3.244/api/linkDumbbell/" + dumbbellId, {headers: {'Content-Type': 'application/json', 'token': userToken.getToken()}}).then(function(res){
+                    if(res.data.status){
+                        alert("The dumbbell has been linked to your account!");
+                        $scope.dumbbellLinked = true;
+                    } else {
+                        alert("Couldn't connect to the server, try again in a minute");
+                    }
+                    }, function(err){
+                        alert("HTML Error: " + JSON.stringify(err));
+                    })
             }, function(err){
-                alert("Error: " + err);
+                alert("Barcode Error: " + JSON.stringify(err));
             })
-        });
+        })
     }
 })
 .controller('linkDumbbellCtrl', ['$scope', '$stateParams', 'userToken', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
@@ -49,7 +63,7 @@ function ($scope, $stateParams, $cordovaBarcodeScanner) {
 function ($scope, $stateParams, userToken, $http, jwtDecode) {
 
     $http.get("http://46.101.3.244/api/workoutData", {headers: {'Content-Type': 'application/json', 'token': userToken.getToken()}}).then(function(res){
-        alert(JSON.stringify(res));
+        //alert(JSON.stringify(res));
         if(res.data.status){
             $scope.wokouts = res.data.data;
         } else {
