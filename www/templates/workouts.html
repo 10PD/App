@@ -5,8 +5,14 @@
     </div>
     <div class="spacer" style="height: 20px;"></div>
     <ion-list id="workouts-list3">
-      <ion-item ng-repeat="workout in workouts" class="item-icon-right" id="workouts-list-item10">{{workout.workout}}
+      <ion-item ng-repeat="workout in workouts" ng-click="showInfo({{workout}})" class="item-icon-right" id="workouts-list-item10">{{workout.workout}}
         <i class="icon ion-chevron-down"></i>
+        <ion-content id="workoutInfo">
+          <h3 class="workout-header">Reps</h3>
+          <p class="workout-info">{{workout.reps}}</p>
+          <h3 class="workout-header">Form</h3>
+          <p class="workout-info">{{workout.form}}</p>
+        </ion-content>
       </ion-item>
       <ion-item ng-show="!workouts.length">No workouts yet, hit the gym!</ion-item>
     </ion-list>
